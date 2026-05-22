@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Phamdat">
+    <meta name="author" content="Phamdat">
+    <meta name="theme-color" content="#734327">
+    
+    <title>Profile</title>
+    
+    <link rel="icon" href="./assets/avatar.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           BẢNG MÀU TÙY CHỈNH (CUSTOM COLOR PALETTE)
+           ========================================= */
+        :root {
+            /* Backgrounds */
+            --bg-main: #12100E;         /* Nền chính tối */
+            --bg-card: #1C1816;         /* Nền các thẻ/component */
+            --bg-sidebar: #181512;      /* Nền thanh điều hướng */
+            
+            /* Typography */
+            --text-main: #F0EBE1;       /* Chữ chính */
+            --text-muted: #A69E98;      /* Chữ phụ */
+            
+            /* Custom Palette */
+            --c-brown: #734327;         /* Màu chủ đạo (Avatar tone) */
+            --c-blue-light: #6C87D9;    /* Phụ 1 */
+            --c-blue-dark: #425B8C;     /* Phụ 2 */
+            --c-teal: #128BA6;          /* Phụ 3 */
+            --c-orange: #F2994B;        /* Phụ 4 */
+
+            /* Element Mappings */
+            --primary: var(--c-brown);
+            --accent: var(--c-orange);
+            --border-color: rgba(115, 67, 39, 0.3);
+            --hover-transition: all 0.3s ease;
+        }
+
+        /* =========================================
+           GLOBAL & RESET
+           ========================================= */
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* =========================================
+           LAYOUT & SIDEBAR
+           ========================================= */
+        #app-container { display: flex; min-height: 100vh; }
+
+        #sidebar {
+            width: 80px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .nav-item {
+            width: 50px;
+            height: 50px;
+            margin: 15px 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            background: transparent;
+            transition: var(--hover-transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(115, 67, 39, 0.4);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            left: 70px;
+            background: var(--primary);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: var(--hover-transition);
+            white-space: nowrap;
+        }
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -4px;
+            transform: translateY(-50%);
+            border-width: 5px 5px 5px 0;
+            border-style: solid;
+            border-color: transparent var(--primary) transparent transparent;
+        }
+        .nav-item:hover .tooltip { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           MAIN CONTENT AREA
+           ========================================= */
+        #main-content {
+            margin-left: 80px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .component {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .component.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* =========================================
+           HOME COMPONENT
+           ========================================= */
+        #avatar-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(135deg, var(--c-brown), var(--c-orange));
+        }
+        #avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-image: url('./assets/avatar.png');
+            background-size: cover;
+            background-position: center;
+            border: 4px solid var(--bg-main);
+        }
+
+        #home h1 { text-align: center; font-size: 3rem; color: #fff; margin-bottom: 5px; }
+        #home p { text-align: center; color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px; }
+
+        .social-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            border: 1px solid var(--border-color);
+            transition: var(--hover-transition);
+        }
+        .social-btn:hover { background: var(--primary); color: #fff; transform: translateY(-3px); }
+        .social-btn span { font-size: 0.9rem; font-family: 'Poppins', sans-serif; }
+
+        /* =========================================
+           ABOUT COMPONENT
+           ========================================= */
+        .info-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+        }
+        .info-table { width: 100%; border-collapse: collapse; }
+        .info-table th { 
+            text-align: left; 
+            color: var(--c-orange); 
+            padding: 15px 10px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            width: 30%;
+        }
+        .info-table td { 
+            padding: 15px 10px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            color: var(--text-main);
+        }
+        .info-table tr:last-child th, .info-table tr:last-child td { border-bottom: none; }
+
+        /* =========================================
+           PROJECTS COMPONENT
+           ========================================= */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .project-card {
+            position: relative;
+            height: 220px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+        .project-img {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+        .project-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(18, 16, 14, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--hover-transition);
+        }
+        .project-overlay h3 { color: var(--c-orange); font-size: 1.5rem; letter-spacing: 1px; transform: translateY(20px); transition: var(--hover-transition); }
+        
+        .project-card:hover .project-img { transform: scale(1.1); }
+        .project-card:hover .project-overlay { opacity: 1; }
+        .project-card:hover .project-overlay h3 { transform: translateY(0); }
+
+        .coming-soon { text-align: center; margin-top: 40px; color: var(--text-muted); font-style: italic; }
+
+        /* =========================================
+           RESPONSIVE DESIGN
+           ========================================= */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 100%;
+                height: 70px;
+                flex-direction: row;
+                bottom: 0;
+                top: auto;
+                border-right: none;
+                border-top: 1px solid var(--border-color);
+            }
+            .nav-item { margin: 0 15px; }
+            .tooltip { display: none; }
+            #main-content { margin-left: 0; padding: 1.5rem; margin-bottom: 70px; align-items: flex-start; }
+            #home h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <nav id="sidebar">
+            <div class="nav-item active" data-target="home">
+                <i class="fas fa-home"></i>
+                <span class="tooltip">Home</span>
+            </div>
+            <div class="nav-item" data-target="about">
+                <i class="fas fa-user"></i>
+                <span class="tooltip">About</span>
+            </div>
+            <div class="nav-item" data-target="projects">
+                <i class="fas fa-briefcase"></i>
+                <span class="tooltip">Projects</span>
+            </div>
+        </nav>
+
+        <main id="main-content">
+            
+            <section id="home" class="component active">
+                <div id="avatar-container">
+                    <div id="avatar"></div>
+                </div>
+                <h1>Phamdat</h1>
+                <p>Any code is good, as long as it works.</p>
+                
+                <div class="social-links">
+                    <a href="https://www.facebook.com/realphamdat0" target="_blank" class="social-btn"><i class="fab fa-facebook"></i></a>
+                    <a href="https://discord.com/users/1191703681637290086" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
+                    <a href="https://github.com/realphamdat" target="_blank" class="social-btn"><i class="fab fa-github"></i></a>
+                    <a href="https://www.youtube.com/@realPhamdat0" target="_blank" class="social-btn"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.tiktok.com/@realphamdat" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
+                    <a href="mailto:phamthanhdat140510@gmail.com" class="social-btn">
+                        <i class="fa fa-envelope"></i> <span>Email Me</span>
+                    </a>
+                </div>
+            </section>
+
+            <section id="about" class="component">
+                <h2 class="section-title">About Me</h2>
+                <div class="info-card">
+                    <table class="info-table">
+                        <tbody>
+                            <tr><th>Full Name</th><td>Phạm Thành Đạt</td></tr>
+                            <tr><th>Gender</th><td>Male</td></tr>
+                            <tr><th>Born</th><td>14/05/2010</td></tr>
+                            <tr><th>Country</th><td>Vietnam</td></tr>
+                            <tr><th>Language</th><td>Vietnamese, English</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="projects" class="component">
+                <h2 class="section-title">My Projects</h2>
+                <div class="project-grid">
+                    <div class="project-card" onclick="window.open('https://github.com/realphamdat/phamdat-selfbot');">
+                        <div class="project-img" style="background-image: url('./assets/Phamdat Selfbot.png');"></div>
+                        <div class="project-overlay">
+                            <h3>Phamdat Selfbot</h3>
+                        </div>
+                    </div>
+                    <div class="project-card" onclick="window.open('https://phamdat.pythonanywhere.com');">
+                        <div class="project-img" style="background-image: url('./assets/Music Player.png');"></div>
+                        <div class="project-overlay">
+                            <h3>Music Player</h3>
+                        </div>
+                    </div>
+                    <div class="project-card" onclick="window.open('https://realphamdat.github.io/schedule');">
+                        <div class="project-img" style="background-image: url('./assets/Schedule.png');"></div>
+                        <div class="project-overlay">
+                            <h3>Schedule</h3>
+                        </div>
+                    </div>
+                </div>
+                <p class="coming-soon">More projects coming soon...</p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Tab Navigation Logic (Chuyển trang)
+        const navItems = document.querySelectorAll('.nav-item');
+        const components = document.querySelectorAll('.component');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Xóa active khỏi toàn bộ nút nav
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+
+                // Lấy target ID
+                const targetId = this.getAttribute('data-target');
+
+                // Ẩn toàn bộ component và hiện component được chọn
+                components.forEach(comp => {
+                    comp.classList.remove('active');
+                    if(comp.id === targetId) {
+                        comp.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
