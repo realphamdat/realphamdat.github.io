@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Phamdat">
     <meta name="author" content="Phamdat">
@@ -15,27 +14,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* =========================================
-           BẢNG MÀU TÙY CHỈNH (CUSTOM COLOR PALETTE)
-           ========================================= */
+        /* Custom color palette */
         :root {
-            /* Backgrounds */
-            --bg-main: #12100E;         /* Nền chính tối */
-            --bg-card: #1C1816;         /* Nền các thẻ/component */
-            --bg-sidebar: #181512;      /* Nền thanh điều hướng */
-            
-            /* Typography */
-            --text-main: #F0EBE1;       /* Chữ chính */
-            --text-muted: #A69E98;      /* Chữ phụ */
-            
-            /* Custom Palette */
-            --c-brown: #734327;         /* Màu chủ đạo (Avatar tone) */
-            --c-blue-light: #6C87D9;    /* Phụ 1 */
-            --c-blue-dark: #425B8C;     /* Phụ 2 */
-            --c-teal: #128BA6;          /* Phụ 3 */
-            --c-orange: #F2994B;        /* Phụ 4 */
-
-            /* Element Mappings */
+            --bg-main: #12100E;
+            --bg-card: #1C1816;
+            --bg-sidebar: #181512;
+            --text-main: #F0EBE1;
+            --text-muted: #A69E98;
+            --c-brown: #734327;
+            --c-orange: #F2994B;
             --primary: var(--c-brown);
             --accent: var(--c-orange);
             --border-color: rgba(115, 67, 39, 0.3);
@@ -379,26 +366,14 @@
     </div>
 
     <script>
-        // Tab Navigation Logic (Chuyển trang)
         const navItems = document.querySelectorAll('.nav-item');
         const components = document.querySelectorAll('.component');
 
         navItems.forEach(item => {
-            item.addEventListener('click', function() {
-                // Xóa active khỏi toàn bộ nút nav
-                navItems.forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-
-                // Lấy target ID
-                const targetId = this.getAttribute('data-target');
-
-                // Ẩn toàn bộ component và hiện component được chọn
-                components.forEach(comp => {
-                    comp.classList.remove('active');
-                    if(comp.id === targetId) {
-                        comp.classList.add('active');
-                    }
-                });
+            item.addEventListener('click', () => {
+                const targetId = item.dataset.target;
+                navItems.forEach(nav => nav.classList.toggle('active', nav === item));
+                components.forEach(comp => comp.classList.toggle('active', comp.id === targetId));
             });
         });
     </script>
